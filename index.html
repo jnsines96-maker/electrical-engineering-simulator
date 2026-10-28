@@ -40,7 +40,7 @@
     <p class="small" style="margin-top:12px">Fictional training scenario. The project's adopted code basis is intentionally unconfirmed in this test build. Code-dependent calculations remain provisional until the AHJ, adopted edition, and applicable requirements are verified. Not for construction.</p>
     <details class="doc"><summary>Developer tools</summary><label class="checkrow"><input id="debugToggle" type="checkbox" onchange="toggleDebug(this.checked)"> Enable debug mode (unlock stages)</label><div class="actions"><button class="btn secondary" id="skipBtn" onclick="skipStage()">Skip to next stage →</button><button class="btn danger" onclick="resetProject()">Reset test project</button></div></details>
   </section>
-  <div class="footer">Maple Street Professional Office · Simulator v0.14.0 · Task 1 test build</div>
+  <div class="footer">Maple Street Professional Office · Simulator v0.15.0 · Task 1 test build</div>
 </main>
 <script>
 const KEY='maple-task2-test-v02';
@@ -109,10 +109,11 @@ function renderTask1Brief(el){
  el.innerHTML=`<div class="eyebrow">Task 1 · Stage 1 of 3 · Project setup</div>
  <h2>Identify the assignment and its limits</h2>
  <p class="lead">Review the assignment email, then make the project decisions using the structured controls below. No written essay is required.</p>
- <div class="doc"><div class="row start"><div><h3>Assignment email</h3><div class="small">From: Senior Electrical Engineer · Subject: MS-001 — Project setup</div></div><span class="pill blue">Internal design task</span></div>
- <p>Prepare a preliminary electrical investigation for an approximately 3,000 ft² existing office renovation. Establish the project basis, identify missing inputs, and organize the first-pass load estimate. The package is for senior-engineer review, not construction.</p>
- <p style="margin-bottom:0"><strong>Available now:</strong> conceptual room-use plan and limited illustrative equipment data. Final lighting, mechanical schedules, tenant equipment data, code basis, and verified existing-system records are not yet available.</p></div>
- <div class="grid3" style="margin:14px 0"><div class="stat"><div class="label">Project</div><div class="value">MS-001</div><div class="small">Maple Street Professional Office Renovation</div></div><div class="stat"><div class="label">Area</div><div class="value">3,000 ft²</div><div class="small">Approximate</div></div><div class="stat"><div class="label">Deliverable</div><div class="value" style="font-size:1.1rem">Preliminary</div><div class="small">Senior review required</div></div></div>
+ <div class="doc"><div class="row start"><div><h3>Assignment email</h3><div class="small">From: Senior Electrical Engineer · Subject: MS-001 — Preliminary Electrical Design</div></div><span class="pill blue">Internal design task</span></div>
+ <p>We’re beginning the electrical design for the Maple Street Professional Office Renovation. I’d like you to take the first pass at organizing the electrical work before we get into detailed calculations.</p>
+ <p>Start by reviewing the available project information and architectural layout. Establish what we know, identify what we still need, and put together a practical plan for completing the preliminary electrical assessment.</p>
+ <p>You’ll eventually prepare a connected-load inventory and a preliminary demand estimate for my review. We don’t have all the final schedules yet, so use your judgment about what can be started now and what needs further information.</p>
+ <p style="margin-bottom:0">Please bring me a short, organized project setup package before proceeding too far into the technical work.</p></div>
  <div class="grid2">
  <label class="field-label">1. What is the primary purpose of this assignment?
  <select class="field" data-state="task1ScopeChoice">
@@ -312,7 +313,7 @@ function renderStage6(el){
  bindFields(['reviewSummary','reviewDecision']);
 }
 function submitStage6(){const s=state.reviewSummary.trim(),d=state.reviewDecision;let msg;if(s.length<60||!d){msg='Before submitting, provide a more complete summary and select a submission status. Explain the estimate’s limitations, open issues, and next actions.'}else if(d==='ready'){msg='Package submitted for senior review. The reviewer will focus on source traceability, the applicability of calculation methods, unresolved loads, and whether the conclusion is appropriately qualified.'}else if(d==='revise'){msg='Submission marked for revision. Identify the highest-impact correction and revise the affected work before resubmitting.'}else{msg='Interim status update submitted. This is appropriate when the code basis or key inputs remain unresolved; do not label code-dependent results as verified.'}document.getElementById('stageFeedback').innerHTML=complete(msg,'Finish review →')}
-function exportWork(){const data={project:'Maple Street Professional Office Renovation',tasks:['Task 1 — Project Setup','Task 2 — Preliminary Load Estimate'],version:'0.14.0',exportedAt:new Date().toISOString(),state};const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});downloadBlob(blob,'Maple_Street_Tasks1-2_Project_Work.json')}
+function exportWork(){const data={project:'Maple Street Professional Office Renovation',tasks:['Task 1 — Project Setup','Task 2 — Preliminary Load Estimate'],version:'0.15.0',exportedAt:new Date().toISOString(),state};const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});downloadBlob(blob,'Maple_Street_Tasks1-2_Project_Work.json')}
 function exportInventoryCSV(){const header=['ID','Category','Description','Room','Quantity','Rating per item','Unit','Calculated value','Source','Status','Notes'];const rows=state.inventory.map(i=>[i.id,categoryName(i.category),i.description,i.room,i.qty,i.rating,i.unit,connected(i)??'',i.source,i.status,i.notes]);const csv=[header,...rows].map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');downloadBlob(new Blob([csv],{type:'text/csv;charset=utf-8'}),'Maple_Street_Task2_Inventory.csv')}
 function downloadBlob(blob,name){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 function resetProject(){if(confirm('Reset all Task 1, Task 2, and project workbook data in this browser? Export your work first if you want to keep it.')){localStorage.removeItem(KEY);state=blankState();planZoom=1;render()}}
